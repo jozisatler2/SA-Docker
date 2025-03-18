@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, send_from_directory
 import cv2
 import threading
 import time
@@ -9,14 +9,17 @@ camera = cv2.VideoCapture(0)
 
 @app.route('/')
 def home():    
-    return "Hello"
+    return '<img src="/image.png">'
+
+@app.route('/image.png')
+def serve_image():
+    return send_from_directory(os.getcwd(), 'image.png')
 
 def capture():
     while True:
         _, image = camera.read()
-        os.system("rm -f image.png")
         cv2.imwrite('image.png', image)
-        time.sleep(10)
+        time.sleep(1)
 
 if __name__ == '__main__':
     thread = threading.Thread(target=capture)
