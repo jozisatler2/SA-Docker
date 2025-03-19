@@ -1,0 +1,18 @@
+FROM python:3.9-slim
+
+WORKDIR /app
+
+COPY server-requirements.txt .
+
+RUN apt-get update && apt-get upgrade -y
+RUN apt-get install ffmpeg libsm6 libxext6 libgl1 -y
+RUN pip install -r server-requirements.txt
+
+COPY server.py .
+
+EXPOSE 5000
+
+CMD ["python", "server.py"]
+
+# sudo docker build . -t server_image -f Dockerfile-server
+# sudo docker run --rm -ti --name server --device=/dev/video0 -p 5000:5000 server_image
