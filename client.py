@@ -1,12 +1,23 @@
-from flask import Flask
+from flask import Flask, send_from_directory
+import threading
 import socketio
+import os
 
 socket = socketio.Client()
+app = Flask(__name__)
 server = 'http://localhost:5000'
+
+@app.route('/')
+def home():    
+    return '<img src="/received.png">'
+
+@app.route('/received.png')
+def serve_image():
+    return send_from_directory(os.getcwd(), 'received.png')
 
 @socket.on('update')
 def on_update():
-    print("update")
+    os.system(f"curl {server}/image.png -o received.png") 
 
 def connect():
     try:
@@ -19,4 +30,7 @@ def connect():
         socket.disconnect()
 
 if __name__ == '__main__':
-    connect()
+    thread = threading.Thread(target=connect)
+    thread.daemon = True
+    thread.start()
+    app.run(host='0.0.0.0', port=5001)
