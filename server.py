@@ -10,10 +10,6 @@ camera = cv2.VideoCapture(0)
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*")
 
-# @app.route('/')
-# def home():    
-#     return '<img src="/image.png">'
-
 @app.route('/image.png')
 def serve_image():
     return send_from_directory(os.getcwd(), 'image.png')
@@ -29,4 +25,4 @@ if __name__ == '__main__':
     thread = threading.Thread(target=capture)
     thread.daemon = True
     thread.start()
-    socketio.run(app)
+    socketio.run(app, host="0.0.0.0", port=5000, allow_unsafe_werkzeug=True)

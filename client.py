@@ -5,7 +5,7 @@ import os
 
 socket = socketio.Client()
 app = Flask(__name__)
-server = 'http://172.18.0.2:5000'
+server = 'http://server:5000'
 
 @app.route('/')
 def home():    
